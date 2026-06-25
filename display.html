@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Signage – Montörsbokning</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+</head>
+<body class="signage">
+  <header>
+    <div>
+      <h1 id="companyName">Montörsbokning</h1>
+      <div class="subtitle">Signage-vy</div>
+    </div>
+    <div class="toolbar">
+      <button id="weekBtn" class="active">Vecka</button>
+      <button id="monthBtn">Månad</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="calendar">
+      <div class="calendar-head">
+        <div>
+          <div id="calTitle" class="calendar-title">Vecka</div>
+          <div id="calSubtitle" class="calendar-subtitle"></div>
+        </div>
+        <div class="toolbar">
+          <button id="prevBtn">← Föregående</button>
+          <button id="todayBtn">Idag</button>
+          <button id="nextBtn">Nästa →</button>
+        </div>
+      </div>
+      <div id="weekView" class="week-grid"></div>
+      <div id="monthView" class="month-grid hidden"></div>
+    </section>
+  </main>
+
+  <script type="module" src="display.js"></script>
+</body>
+</html>

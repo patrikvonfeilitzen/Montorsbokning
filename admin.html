@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin – Montörsbokning</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <header>
+    <div>
+      <h1 id="companyName">Montörsbokning</h1>
+      <div class="subtitle">Bokningar</div>
+    </div>
+    <div class="toolbar">
+      <button id="weekBtn" class="active">Vecka</button>
+      <button id="monthBtn">Månad</button>
+      <a href="settings.html"><button>Inställningar</button></a>
+      <a href="display.html" target="_blank"><button>Signage</button></a>
+      <button id="logoutBtn" class="secondary">Logga ut</button>
+    </div>
+  </header>
+
+  <main>
+    <aside id="formPanel" class="panel">
+      <h2 id="formTitle">Ny bokning</h2>
+      <div class="edit-note">
+        Du redigerar en befintlig bokning. Ändra fälten och klicka <strong>Spara ändring</strong>.
+      </div>
+
+      <label>Datum</label>
+      <input id="date" type="date" />
+
+      <div class="form-row">
+        <div>
+          <label>Start</label>
+          <input id="start" type="time" value="08:00" />
+        </div>
+        <div>
+          <label>Slut</label>
+          <input id="end" type="time" value="12:00" />
+        </div>
+      </div>
+
+      <label>Montör</label>
+      <select id="installer"></select>
+
+      <label>Kund / jobb</label>
+      <input id="customer" placeholder="Ex. Kund AB – Montage" />
+
+      <label>Plats</label>
+      <input id="location" placeholder="Ex. Malmö" />
+
+      <label>Status</label>
+      <select id="status">
+        <option>Bokad</option>
+        <option>Pågående</option>
+        <option>Klar</option>
+        <option>Ombokas</option>
+      </select>
+
+      <label>Kommentar</label>
+      <textarea id="notes" placeholder="Intern anteckning"></textarea>
+
+      <button id="saveBtn" style="width: 100%; margin-top: 14px;">Lägg till bokning</button>
+
+      <div id="editActions" class="button-grid hidden">
+        <button id="cancelBtn" class="secondary">Avbryt</button>
+        <button id="deleteBtn" class="danger">Ta bort</button>
+      </div>
+
+      <div class="section-separator"></div>
+      <h2>Montörer</h2>
+      <div id="legend" class="legend"></div>
+      <p class="help-text">Lägg till eller ändra montörer under Inställningar.</p>
+    </aside>
+
+    <section class="calendar">
+      <div class="mobile-list panel">
+        <h2>Idag och kommande</h2>
+        <div id="mobileList"></div>
+      </div>
+
+      <div class="calendar-head">
+        <div>
+          <div id="calTitle" class="calendar-title">Vecka</div>
+          <div id="calSubtitle" class="calendar-subtitle"></div>
+        </div>
+        <div class="toolbar">
+          <button id="prevBtn">← Föregående</button>
+          <button id="todayBtn">Idag</button>
+          <button id="nextBtn">Nästa →</button>
+        </div>
+      </div>
+
+      <div id="weekView" class="week-grid"></div>
+      <div id="monthView" class="month-grid hidden"></div>
+    </section>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

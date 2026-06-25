@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inställningar – Montörsbokning</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <header>
+    <div>
+      <h1 id="companyName">Montörsbokning</h1>
+      <div class="subtitle">Inställningar</div>
+    </div>
+    <div class="toolbar">
+      <a href="admin.html"><button>Bokningar</button></a>
+      <a href="display.html" target="_blank"><button>Signage</button></a>
+      <button id="logoutBtn" class="secondary">Logga ut</button>
+    </div>
+  </header>
+
+  <main class="settings-main">
+    <div class="settings-grid">
+      <section class="panel">
+        <h2>Hantera montörer</h2>
+        <p class="help-text">Lägg till montörer här så slipper huvudsidan bli plottrig.</p>
+
+        <div class="form-row">
+          <div>
+            <label>Namn</label>
+            <input id="newInstallerName" placeholder="Ex. Emma" />
+          </div>
+          <div>
+            <label>Färg</label>
+            <input id="newInstallerColor" type="color" value="#db2777" />
+          </div>
+        </div>
+        <button id="addInstallerBtn" style="width: 100%; margin-top: 10px;">Lägg till montör</button>
+
+        <div class="section-separator"></div>
+        <div id="installerList"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Outlook-prenumeration</h2>
+        <p class="help-text">
+          Kopiera en kalenderlänk och lägg till den i Outlook via “Prenumerera från webben”.
+          Kalendern är läsbar i Outlook. Ändringar görs i bokningssystemet.
+        </p>
+
+        <label>Alla bokningar</label>
+        <div class="copy-row">
+          <input id="allCalendarUrl" readonly />
+          <button data-copy-target="allCalendarUrl">Kopiera</button>
+        </div>
+
+        <div class="section-separator"></div>
+
+        <h2>Per montör</h2>
+        <div id="installerCalendarLinks"></div>
+
+        <div class="section-separator"></div>
+        <p class="help-text">
+          Om länkarna är tomma behöver du fylla i <strong>CALENDAR_FUNCTION_URL</strong> i <strong>config.js</strong>
+          efter att Supabase Edge Function är deployad.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="settings.js"></script>
+</body>
+</html>

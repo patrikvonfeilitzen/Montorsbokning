@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Montörsbokning</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+</head>
+<body class="login-body">
+  <form class="login-card" id="loginForm">
+    <h1 id="companyName">Montörsbokning</h1>
+    <p>Logga in för att hantera bokningar från dator eller mobil.</p>
+
+    <label>E-post</label>
+    <input id="email" type="email" autocomplete="username" placeholder="namn@firma.se" />
+
+    <label>Lösenord</label>
+    <input id="password" type="password" autocomplete="current-password" />
+
+    <button type="submit">Logga in</button>
+    <div id="error" class="error"></div>
+
+    <p style="text-align:center; margin-top:18px;">
+      <a href="display.html">Öppna signage-vy</a>
+    </p>
+  </form>
+
+  <script type="module">
+    import { supabase, companyName } from "./supabaseClient.js";
+
+    document.getElementById("companyName").textContent = companyName;
+
+    const { data } = await supabase.auth.getSession();
+    if (data.session) location.href = "admin.html";
+
+    document.getElementById("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      document.getElementById("error").textContent = "";
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email: document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value
+      });
+
+      if (error) {
+        document.getElementById("error").textContent = "Kunde inte logga in. Kontrollera e-post och lösenord.";
+      } else {
+        location.href = "admin.html";
+      }
+    });
+  </script>
+</body>
+</html>
