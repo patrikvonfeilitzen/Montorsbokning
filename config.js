@@ -8,5 +8,5 @@ window.APP_CONFIG = {
 
   // Efter att Edge Function är deployad:
   // https://clvdlhifrnscvtmibsdw.supabase.co.supabase.co/functions/v1/calendar-feed
-  CALENDAR_FUNCTION_URL: "YOUR_CALENDAR_FUNCTION_URL"
+  CALENDAR_FUNCTION_URL: "https://clvdlhifrnscvtmibsdw.supabase.co/functions/v1/calendar-feed"
 };
