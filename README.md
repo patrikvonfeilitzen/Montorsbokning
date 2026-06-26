@@ -124,3 +124,13 @@ Observera att Outlook kan ha fördröjning innan ändringar syns.
 - Ändringar i bokningar och montörer kräver inloggad användare.
 
 Om ICS-länkarna ska vara privata kan funktionen byggas ut med en hemlig token.
+
+
+## v2-förbättringar
+
+Denna version innehåller:
+
+- Signage-vyn är justerad för att bättre passa i webbläsarfönstret utan vertikal scroll.
+- Både admin- och signage-vy visar `Senast uppdaterad`.
+- Månadsvyn visar veckonummer och veckodagar.
+- Lördag och söndag är lätt skuggade i månadsvyn.

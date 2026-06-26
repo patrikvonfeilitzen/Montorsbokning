@@ -7,6 +7,30 @@ let selectedBookingId = null;
 let installers = [];
 let bookings = [];
 
+
+function setLastUpdated() {
+  const el = document.getElementById("lastUpdated");
+  if (!el) return;
+  const now = new Date();
+  el.textContent = "Senast uppdaterad: " + now.toLocaleTimeString("sv-SE", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function monthHeaderHtml() {
+  return `
+    <div class="month-weekday">v</div>
+    <div class="month-weekday">Mån</div>
+    <div class="month-weekday">Tis</div>
+    <div class="month-weekday">Ons</div>
+    <div class="month-weekday">Tors</div>
+    <div class="month-weekday">Fre</div>
+    <div class="month-weekday">Lör</div>
+    <div class="month-weekday">Sön</div>
+  `;
+}
+
 document.getElementById("companyName").textContent = companyName;
 
 const sessionResult = await supabase.auth.getSession();
@@ -31,6 +55,7 @@ async function loadAll() {
 
   installers = installersResult.data || [];
   bookings = normalizeBookings(bookingsResult.data || []);
+  setLastUpdated();
   refreshInstallerUI();
   render();
 }
@@ -180,20 +205,31 @@ function renderMonth() {
   document.getElementById("calTitle").textContent = first.toLocaleDateString("sv-SE", { month: "long", year: "numeric" });
   document.getElementById("calSubtitle").textContent = "Månadsvy";
 
-  const days = Array.from({length: 42}, (_, i) => addDays(start, i));
-  document.getElementById("monthView").innerHTML = days.map(d => {
-    const iso = toISODate(d);
-    const muted = d.getMonth() !== m ? "opacity:.45;" : "";
-    const dayBookings = bookings.filter(b => b.date === iso).sort((a,b) => a.start.localeCompare(b.start));
-    return `<div class="month-cell" style="${muted}">
-      <div class="month-date">${d.getDate()}</div>
-      ${dayBookings.slice(0,3).map(b => {
-        const selected = b.id === selectedBookingId ? "selected" : "";
-        return `<span class="mini-booking ${selected}" data-calendar-booking-id="${b.id}" style="background:${b.installer_color}">${escapeHtml(b.start)} ${escapeHtml(b.installer_name)} – ${escapeHtml(b.customer)}</span>`;
-      }).join("")}
-      ${dayBookings.length > 3 ? `<span style="color:var(--muted); font-size:11px;">+${dayBookings.length - 3} fler</span>` : ""}
-    </div>`;
-  }).join("");
+  const weeks = Array.from({length: 6}, (_, w) => Array.from({length: 7}, (_, d) => addDays(start, w * 7 + d)));
+  const html = [monthHeaderHtml()];
+
+  for (const week of weeks) {
+    html.push(`<div class="month-weekno">v ${getWeekNumber(week[0])}</div>`);
+
+    for (let dayIndex = 0; dayIndex < week.length; dayIndex++) {
+      const d = week[dayIndex];
+      const iso = toISODate(d);
+      const muted = d.getMonth() !== m ? "opacity:.45;" : "";
+      const weekend = dayIndex >= 5 ? "weekend" : "";
+      const dayBookings = bookings.filter(b => b.date === iso).sort((a,b) => a.start.localeCompare(b.start));
+
+      html.push(`<div class="month-cell ${weekend}" style="${muted}">
+        <div class="month-date">${d.getDate()}</div>
+        ${dayBookings.slice(0,3).map(b => {
+          const selected = b.id === selectedBookingId ? "selected" : "";
+          return `<span class="mini-booking ${selected}" data-calendar-booking-id="${b.id}" style="background:${b.installer_color}">${escapeHtml(b.start)} ${escapeHtml(b.installer_name)} – ${escapeHtml(b.customer)}</span>`;
+        }).join("")}
+        ${dayBookings.length > 3 ? `<span style="color:var(--muted); font-size:11px;">+${dayBookings.length - 3} fler</span>` : ""}
+      </div>`);
+    }
+  }
+
+  document.getElementById("monthView").innerHTML = html.join("");
 
   document.querySelectorAll("[data-calendar-booking-id]").forEach(el => {
     el.addEventListener("click", () => editBooking(el.dataset.calendarBookingId));
