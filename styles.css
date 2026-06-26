@@ -592,3 +592,78 @@ body.signage .mini-booking {
     padding: 7px;
   }
 }
+
+
+/* v4: signage ska kunna skrollas på mobil */
+@media (max-width: 980px) {
+  body.signage {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  body.signage header {
+    min-height: auto;
+    padding: 16px 18px;
+  }
+
+  body.signage main {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding: 12px;
+  }
+
+  body.signage .calendar {
+    height: auto;
+    overflow: visible;
+  }
+
+  body.signage .week-grid {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  body.signage .day {
+    height: auto;
+    min-height: 96px;
+  }
+
+  body.signage .calendar-title {
+    font-size: 34px;
+  }
+
+  body.signage .calendar-head {
+    gap: 12px;
+  }
+
+  body.signage .month-grid {
+    height: auto;
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  body.signage .month-cell,
+  body.signage .month-weekno {
+    min-height: 82px;
+  }
+
+  body.signage .booking {
+    padding: 12px;
+    margin: 10px;
+  }
+
+  body.signage .installer {
+    font-size: 22px;
+  }
+
+  body.signage .customer {
+    font-size: 17px;
+  }
+
+  body.signage .time {
+    font-size: 15px;
+  }
+}
