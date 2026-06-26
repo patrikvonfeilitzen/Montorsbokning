@@ -31,6 +31,30 @@ function monthHeaderHtml() {
   `;
 }
 
+function dateRange(startIso, endIso) {
+  const dates = [];
+  const start = new Date(startIso + "T00:00:00");
+  const end = new Date(endIso + "T00:00:00");
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return dates;
+
+  const currentDate = new Date(start);
+  while (currentDate <= end) {
+    dates.push(toISODate(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
+}
+
+function syncEndDateMin() {
+  const startDate = document.getElementById("date").value;
+  const endDate = document.getElementById("endDate");
+  endDate.min = startDate;
+  if (!endDate.value || endDate.value < startDate) endDate.value = startDate;
+}
+
+
 document.getElementById("companyName").textContent = companyName;
 
 const sessionResult = await supabase.auth.getSession();
@@ -88,7 +112,10 @@ function refreshInstallerUI() {
 }
 
 function initForm() {
-  document.getElementById("date").value = toISODate(new Date());
+  const today = toISODate(new Date());
+  document.getElementById("date").value = today;
+  document.getElementById("endDate").value = today;
+  syncEndDateMin();
 }
 
 function setEditMode(isEditing) {
@@ -100,7 +127,10 @@ function setEditMode(isEditing) {
 
 function clearForm() {
   selectedBookingId = null;
-  document.getElementById("date").value = toISODate(new Date());
+  const today = toISODate(new Date());
+  document.getElementById("date").value = today;
+  document.getElementById("endDate").value = today;
+  syncEndDateMin();
   document.getElementById("start").value = "08:00";
   document.getElementById("end").value = "12:00";
   if (installers[0]) document.getElementById("installer").value = installers[0].id;
@@ -115,6 +145,7 @@ function clearForm() {
 function getFormBooking() {
   return {
     booking_date: document.getElementById("date").value,
+    end_date: document.getElementById("endDate").value || document.getElementById("date").value,
     start_time: document.getElementById("start").value,
     end_time: document.getElementById("end").value,
     installer_id: document.getElementById("installer").value,
@@ -131,6 +162,8 @@ function editBooking(id) {
 
   selectedBookingId = b.id;
   document.getElementById("date").value = b.date;
+  document.getElementById("endDate").value = b.date;
+  syncEndDateMin();
   document.getElementById("start").value = b.start;
   document.getElementById("end").value = b.end;
   document.getElementById("installer").value = b.installer_id;
@@ -248,13 +281,34 @@ function bookingHtml(b) {
 
 document.getElementById("saveBtn").onclick = async () => {
   const booking = getFormBooking();
+
   if (!booking.installer_id) return alert("Lägg till minst en montör först.");
   if (!booking.customer) return alert("Skriv kund eller jobb.");
   if (booking.end_time <= booking.start_time) return alert("Sluttiden behöver vara senare än starttiden.");
+  if (booking.end_date < booking.booking_date) return alert("Slutdatum behöver vara samma dag eller senare än startdatum.");
 
-  const result = selectedBookingId
-    ? await supabase.from("bookings").update(booking).eq("id", selectedBookingId)
-    : await supabase.from("bookings").insert(booking);
+  let result;
+
+  if (selectedBookingId) {
+    // Vid redigering ändras den valda bokningen. Flerdagarsjobb skapas när du gör en ny bokning.
+    const updateBooking = { ...booking };
+    delete updateBooking.end_date;
+    result = await supabase.from("bookings").update(updateBooking).eq("id", selectedBookingId);
+  } else {
+    const dates = dateRange(booking.booking_date, booking.end_date);
+    const rows = dates.map(date => ({
+      booking_date: date,
+      start_time: booking.start_time,
+      end_time: booking.end_time,
+      installer_id: booking.installer_id,
+      customer: booking.customer,
+      location: booking.location,
+      status: booking.status,
+      notes: booking.notes
+    }));
+
+    result = await supabase.from("bookings").insert(rows);
+  }
 
   if (result.error) return alert(result.error.message);
 
@@ -286,6 +340,8 @@ document.getElementById("nextBtn").onclick = () => {
   current.setDate(current.getDate() + (mode === "week" ? 7 : 31));
   render();
 };
+
+document.getElementById("date").addEventListener("change", syncEndDateMin);
 
 document.getElementById("logoutBtn").onclick = async () => {
   await supabase.auth.signOut();

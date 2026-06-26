@@ -134,3 +134,21 @@ Denna version innehåller:
 - Både admin- och signage-vy visar `Senast uppdaterad`.
 - Månadsvyn visar veckonummer och veckodagar.
 - Lördag och söndag är lätt skuggade i månadsvyn.
+
+
+## v3-förbättringar
+
+- Signage-vyn har nu en Admin-knapp bredvid Vecka/Månad.
+
+
+## v4-förbättringar
+
+- Signage-vyn är fortsatt höjdanpassad på stor skärm/TV.
+- På mobil får signage-vyn nu scroll igen så alla dagar och bokningar går att se.
+
+
+## v5-förbättringar
+
+- Bokningsformuläret har nu Startdatum och Slutdatum.
+- Nya flerdagarsjobb skapas som en bokning per dag i valt datumintervall.
+- Redigering ändrar den valda bokningen; skapa ny flerdagarsbokning för att lägga ut flera dagar på en gång.
