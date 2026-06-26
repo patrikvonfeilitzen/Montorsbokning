@@ -1,669 +1,111 @@
-:root {
-  --bg: #0f172a;
-  --panel: #111827;
-  --muted: #94a3b8;
-  --text: #f8fafc;
-  --line: rgba(255,255,255,.12);
-  --accent: #38bdf8;
-  --bad: #ef4444;
-  --ok: #22c55e;
-}
+:root{--bg:#0f172a;--panel:#111827;--muted:#94a3b8;--text:#f8fafc;--line:rgba(255,255,255,.12);--accent:#38bdf8}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}button{border:1px solid var(--line);background:#111827;color:var(--text);border-radius:10px;padding:10px 12px;font-size:14px;cursor:pointer;font-weight:750}button.active{background:var(--accent);color:#082f49;border-color:var(--accent)}header{display:flex;gap:16px;justify-content:space-between;align-items:center;padding:16px 30px;border-bottom:1px solid var(--line);background:rgba(15,23,42,.95);min-height:86px}h1{margin:0;font-size:22px}.subtitle{color:var(--muted);font-size:13px;margin-top:3px}.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}main{height:calc(100vh - 86px);overflow:hidden;padding:18px 30px;display:grid;grid-template-columns:1fr}.calendar{height:100%;overflow:hidden}.calendar-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:10px}.calendar-title{font-size:clamp(30px,2.3vw,38px);font-weight:850;line-height:1.05}.calendar-subtitle{color:var(--muted);margin-top:2px;font-size:16px}.last-updated{color:var(--muted);font-size:13px;margin-top:4px}.week-grid{display:grid;grid-template-columns:repeat(5,minmax(170px,1fr));gap:12px;height:calc(100vh - 226px)}.day{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.035);min-height:0;height:100%;overflow:hidden}.day-title{padding:10px 12px;border-bottom:1px solid var(--line);font-weight:850;background:rgba(255,255,255,.04);font-size:20px}.day-date{display:block;color:var(--muted);font-size:12px;font-weight:500;margin-top:2px}.booking{margin:10px;padding:11px;border-radius:13px;color:white;box-shadow:0 10px 22px rgba(0,0,0,.18);background:#2563eb}.time{font-size:15px;font-weight:850;opacity:.95}.installer{font-size:clamp(19px,1.45vw,24px);font-weight:850;margin-top:3px}.customer{margin-top:4px;font-size:clamp(15px,1.05vw,18px);opacity:.96}.meta{margin-top:7px;display:flex;justify-content:space-between;gap:8px;font-size:12px;opacity:.9}.status{background:rgba(0,0,0,.22);border-radius:999px;padding:3px 7px;white-space:nowrap}.month-grid{display:grid;grid-template-columns:52px repeat(7,minmax(95px,1fr));gap:8px;height:calc(100vh - 226px);overflow:hidden}.month-weekday,.month-weekno{border:1px solid var(--line);border-radius:12px;padding:9px;background:rgba(255,255,255,.055);color:#dbeafe;font-size:12px;font-weight:850;text-align:center}.month-weekno{color:var(--muted);display:grid;place-items:center;min-height:70px}.month-cell{min-height:70px;border:1px solid var(--line);border-radius:13px;padding:7px;background:rgba(255,255,255,.035)}.month-cell.weekend{background:rgba(255,255,255,.018);opacity:.72}.month-cell.weekend .month-date{color:#7f8ea3}.month-date{color:var(--muted);font-weight:850;margin-bottom:7px}.mini-booking{display:block;margin-top:4px;padding:4px 6px;border-radius:8px;color:white;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hidden{display:none!important}.error-box{border:1px solid rgba(239,68,68,.4);color:#fecaca;background:rgba(239,68,68,.1);padding:12px;border-radius:14px;margin-bottom:12px}@media(max-width:980px){body{height:auto;min-height:100vh;overflow-y:auto;overflow-x:hidden}header{min-height:auto;padding:16px 18px;align-items:flex-start;flex-direction:column}main{height:auto;min-height:0;overflow:visible;padding:12px}.calendar{height:auto;overflow:visible}.calendar-head{align-items:flex-start;flex-direction:column;gap:12px}.calendar-title{font-size:34px}.week-grid{height:auto;display:grid;grid-template-columns:1fr}.day{height:auto;min-height:96px}.month-grid{grid-template-columns:42px repeat(7,minmax(70px,1fr));height:auto;overflow-x:auto;overflow-y:visible}.month-weekday,.month-weekno,.month-cell{border-radius:10px;padding:7px}.month-cell,.month-weekno{min-height:82px}.booking{padding:12px;margin:10px}.installer{font-size:22px}.customer{font-size:17px}}
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
-
-button, select, input, textarea {
-  border: 1px solid var(--line);
-  background: #111827;
-  color: var(--text);
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 14px;
-}
-
-button { cursor: pointer; font-weight: 750; }
-
-button.active {
-  background: var(--accent);
-  color: #082f49;
-  border-color: var(--accent);
-}
-
-button.danger {
-  background: rgba(239, 68, 68, .18);
-  border-color: rgba(239, 68, 68, .42);
-  color: #fecaca;
-}
-
-button.secondary { background: rgba(255,255,255,.04); }
-
-label {
-  display: block;
-  color: var(--muted);
-  font-size: 12px;
-  margin: 10px 0 5px;
-}
-
-input, select, textarea { width: 100%; }
-
-textarea {
-  min-height: 72px;
-  resize: vertical;
-}
-
-a { color: #bae6fd; text-decoration: none; }
-
-header {
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(15, 23, 42, .95);
-  position: sticky;
-  top: 0;
-  z-index: 5;
-}
-
-h1 { margin: 0; font-size: 22px; }
-
-.subtitle {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 3px;
-}
-
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-
-main {
-  padding: 20px 24px;
-  display: grid;
-  grid-template-columns: 390px 1fr;
-  gap: 20px;
-}
-
-main.settings-main {
-  display: block;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.settings-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
-.panel {
-  background: rgba(17,24,39,.82);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 16px;
-}
-
-.panel h2 {
-  margin: 0 0 12px;
-  font-size: 16px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.button-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.section-separator {
-  height: 1px;
-  background: var(--line);
-  margin: 22px 0;
-}
-
-.calendar {
-  min-width: 760px;
-  overflow: auto;
-}
-
-.calendar-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.calendar-title {
-  font-size: 26px;
-  font-weight: 850;
-}
-
-.calendar-subtitle {
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.week-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(170px, 1fr));
-  gap: 12px;
-}
-
-.day {
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: rgba(255,255,255,.035);
-  min-height: 590px;
-  overflow: hidden;
-}
-
-.day-title {
-  padding: 12px;
-  border-bottom: 1px solid var(--line);
-  font-weight: 850;
-  background: rgba(255,255,255,.04);
-}
-
-.day-date {
-  display: block;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 500;
-  margin-top: 2px;
-}
-
-.booking {
-  margin: 10px;
-  padding: 10px;
-  border-radius: 13px;
-  color: white;
-  box-shadow: 0 10px 22px rgba(0,0,0,.18);
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.booking:hover { border-color: rgba(255,255,255,.55); }
-
-.booking.selected {
-  border-color: white;
-  outline: 3px solid rgba(255,255,255,.18);
-}
-
-.time { font-size: 13px; font-weight: 850; opacity: .95; }
-.installer { font-size: 17px; font-weight: 850; margin-top: 3px; }
-.customer { margin-top: 4px; font-size: 14px; opacity: .96; }
-
-.meta {
-  margin-top: 7px;
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 12px;
-  opacity: .9;
-}
-
-.status {
-  background: rgba(0,0,0,.22);
-  border-radius: 999px;
-  padding: 3px 7px;
-  white-space: nowrap;
-}
-
-.month-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(110px, 1fr));
-  gap: 8px;
-}
-
-.month-cell {
-  min-height: 112px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  padding: 9px;
-  background: rgba(255,255,255,.035);
-}
-
-.month-date {
-  color: var(--muted);
-  font-weight: 850;
-  margin-bottom: 7px;
-}
-
-.mini-booking {
-  display: block;
-  margin-top: 5px;
-  padding: 5px 7px;
-  border-radius: 8px;
-  color: white;
-  font-size: 11px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  border: 1px solid transparent;
-}
-
-.mini-booking.selected {
-  border-color: white;
-  outline: 2px solid rgba(255,255,255,.15);
-}
-
-.hidden { display: none !important; }
-
-.edit-note {
-  display: none;
-  margin: 0 0 12px;
-  padding: 10px;
-  border: 1px solid rgba(56,189,248,.35);
-  border-radius: 12px;
-  background: rgba(56,189,248,.08);
-  color: #bae6fd;
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.edit-mode .edit-note { display: block; }
-
-.installer-card {
-  display: grid;
-  grid-template-columns: 44px 1fr auto;
-  gap: 8px;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-
-.installer-card:last-child { border-bottom: 0; }
-
-.installer-color {
-  width: 38px;
-  height: 38px;
-  border: 0;
-  border-radius: 9px;
-  padding: 2px;
-  background: transparent;
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 7px 10px;
-  font-size: 13px;
-  color: #e5e7eb;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.login-body {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-}
-
-.login-card {
-  width: min(430px, 100%);
-  background: rgba(17,24,39,.88);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 24px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.24);
-}
-
-.login-card p {
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-.login-card button {
-  width: 100%;
-  margin-top: 16px;
-}
-
-.error {
-  margin-top: 12px;
-  color: #fecaca;
-  font-size: 14px;
-}
-
-.mobile-list {
-  display: none;
-}
-
-.list-card {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 10px;
-  margin-bottom: 8px;
-  color: white;
-  cursor: pointer;
-}
-
-.copy-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.copy-row input {
-  font-size: 12px;
-  color: #dbeafe;
-}
-
-.help-text {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-body.signage header { padding: 20px 30px; }
-
-body.signage main {
-  grid-template-columns: 1fr;
-  padding: 24px 30px;
-}
-
-body.signage aside { display: none; }
-
-body.signage .calendar-title { font-size: 38px; }
-body.signage .calendar-subtitle { font-size: 18px; }
-body.signage .day { min-height: calc(100vh - 190px); }
-body.signage .day-title { font-size: 22px; }
-body.signage .booking { padding: 14px; margin: 12px; cursor: default; }
-body.signage .installer { font-size: 24px; }
-body.signage .customer { font-size: 18px; }
-body.signage .time { font-size: 17px; }
-
-@media (max-width: 980px) {
+/* v2: Outlook signage anpassas bättre efter fönsterbredd */
+@media (min-width: 981px) {
   header {
-    position: static;
-    align-items: flex-start;
-    flex-direction: column;
+    padding: 14px 24px;
+    min-height: 78px;
   }
 
   main {
-    grid-template-columns: 1fr;
-    padding: 12px;
-  }
-
-  main.settings-main {
-    padding: 12px;
-  }
-
-  .settings-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .calendar {
-    min-width: 0;
-  }
-
-  .week-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .day {
-    min-height: auto;
-  }
-
-  .month-grid {
-    grid-template-columns: repeat(2, minmax(130px, 1fr));
+    height: calc(100vh - 78px);
+    padding: 16px 24px;
   }
 
   .calendar-head {
-    align-items: flex-start;
-    flex-direction: column;
+    margin-bottom: 10px;
   }
 
-  .mobile-list {
-    display: block;
-    margin-bottom: 14px;
+  .calendar-title {
+    font-size: clamp(28px, 2.2vw, 36px);
   }
-}
 
+  .week-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    height: calc(100vh - 210px);
+    width: 100%;
+  }
 
-/* v2: bättre passning för signage och förbättrad månadsvy */
-.last-updated {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 4px;
-}
+  .day {
+    min-width: 0;
+  }
 
-.month-grid {
-  grid-template-columns: 52px repeat(7, minmax(95px, 1fr));
-}
+  .day-title {
+    font-size: clamp(16px, 1.35vw, 20px);
+    padding: 9px 11px;
+  }
 
-.month-weekday,
-.month-weekno {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 9px;
-  background: rgba(255,255,255,.055);
-  color: #dbeafe;
-  font-size: 12px;
-  font-weight: 850;
-  text-align: center;
-}
+  .booking {
+    margin: 9px;
+    padding: 10px;
+  }
 
-.month-weekno {
-  color: var(--muted);
-  display: grid;
-  place-items: center;
-  min-height: 112px;
-}
+  .time {
+    font-size: clamp(12px, 1.05vw, 15px);
+  }
 
-.month-cell.weekend {
-  background: rgba(255,255,255,.018);
-  opacity: .72;
-}
+  .installer {
+    font-size: clamp(15px, 1.45vw, 22px);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
 
-.month-cell.weekend .month-date {
-  color: #7f8ea3;
-}
+  .customer {
+    font-size: clamp(13px, 1.1vw, 17px);
+    overflow-wrap: anywhere;
+  }
 
-body.signage {
-  height: 100vh;
-  overflow: hidden;
-}
+  .meta {
+    font-size: 11px;
+  }
 
-body.signage header {
-  min-height: 86px;
-  padding: 16px 30px;
-}
+  .status {
+    padding: 2px 6px;
+  }
 
-body.signage main {
-  height: calc(100vh - 86px);
-  overflow: hidden;
-  padding: 18px 30px;
-}
-
-body.signage .calendar {
-  height: 100%;
-  overflow: hidden;
-}
-
-body.signage .calendar-head {
-  margin-bottom: 10px;
-}
-
-body.signage .calendar-title {
-  font-size: clamp(30px, 2.3vw, 38px);
-  line-height: 1.05;
-}
-
-body.signage .calendar-subtitle {
-  font-size: 16px;
-}
-
-body.signage .week-grid {
-  height: calc(100vh - 226px);
-}
-
-body.signage .day {
-  min-height: 0;
-  height: 100%;
-}
-
-body.signage .day-title {
-  padding: 10px 12px;
-  font-size: 20px;
-}
-
-body.signage .booking {
-  padding: 11px;
-  margin: 10px;
-}
-
-body.signage .installer {
-  font-size: clamp(19px, 1.45vw, 24px);
-}
-
-body.signage .customer {
-  font-size: clamp(15px, 1.05vw, 18px);
-}
-
-body.signage .time {
-  font-size: 15px;
-}
-
-body.signage .month-grid {
-  height: calc(100vh - 226px);
-  overflow: hidden;
-}
-
-body.signage .month-cell {
-  min-height: 70px;
-  padding: 7px;
-}
-
-body.signage .month-weekno {
-  min-height: 70px;
-}
-
-body.signage .mini-booking {
-  padding: 4px 6px;
-  margin-top: 4px;
-  font-size: 10px;
-}
-
-@media (max-width: 980px) {
   .month-grid {
-    grid-template-columns: 42px repeat(7, minmax(70px, 1fr));
-    overflow-x: auto;
+    grid-template-columns: 46px repeat(7, minmax(0, 1fr));
+    gap: 7px;
+    height: calc(100vh - 210px);
   }
 
   .month-weekday,
   .month-weekno,
   .month-cell {
-    border-radius: 10px;
-    padding: 7px;
+    min-width: 0;
   }
 }
 
-
-/* v4: signage ska kunna skrollas på mobil */
-@media (max-width: 980px) {
-  body.signage {
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+/* Extra kompakt för smalare skärmar som fortfarande använder desktop-läge */
+@media (min-width: 981px) and (max-width: 1250px) {
+  header {
+    padding: 12px 18px;
   }
 
-  body.signage header {
-    min-height: auto;
-    padding: 16px 18px;
+  main {
+    padding: 14px 18px;
   }
 
-  body.signage main {
-    height: auto;
-    min-height: 0;
-    overflow: visible;
-    padding: 12px;
+  .week-grid {
+    gap: 8px;
   }
 
-  body.signage .calendar {
-    height: auto;
-    overflow: visible;
+  .booking {
+    margin: 8px;
+    padding: 9px;
   }
 
-  body.signage .week-grid {
-    height: auto;
-    display: grid;
-    grid-template-columns: 1fr;
+  .installer {
+    font-size: clamp(14px, 1.6vw, 20px);
   }
 
-  body.signage .day {
-    height: auto;
-    min-height: 96px;
+  .customer {
+    font-size: clamp(12px, 1.25vw, 16px);
   }
 
-  body.signage .calendar-title {
-    font-size: 34px;
-  }
-
-  body.signage .calendar-head {
-    gap: 12px;
-  }
-
-  body.signage .month-grid {
-    height: auto;
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-
-  body.signage .month-cell,
-  body.signage .month-weekno {
-    min-height: 82px;
-  }
-
-  body.signage .booking {
-    padding: 12px;
-    margin: 10px;
-  }
-
-  body.signage .installer {
-    font-size: 22px;
-  }
-
-  body.signage .customer {
-    font-size: 17px;
-  }
-
-  body.signage .time {
-    font-size: 15px;
+  .toolbar button,
+  button {
+    padding: 9px 10px;
   }
 }
